@@ -47,18 +47,20 @@ tasks.shadowJar {
 
     archiveBaseName.set(Properties.archivesBaseName + "-" + project.name)
     archiveClassifier.set("")
-    archiveVersion.set(Properties.pluginVersion)
+    archiveVersion.set(Properties.pluginVersion + "-shadow")
 }
 
 tasks.jar {
     archiveBaseName.set(Properties.archivesBaseName + "-" + project.name)
     archiveClassifier.set("")
-    archiveVersion.set(Properties.pluginVersion)
+    archiveVersion.set(Properties.pluginVersion + "-raw")
 }
 
 tasks.reobfJar {
     // No idea why we didn't need to do this when we used Groovy, but this is necessary to have the correct jar filename (otherwise it will be paper-{VERSION}.jar)
     outputJar.set(layout.buildDirectory.file("libs/${Properties.archivesBaseName + "-" + project.name}-${Properties.pluginVersion}.jar"))
+
+    dependsOn(tasks.jar.get())
 }
 
 tasks.assemble {
