@@ -30,33 +30,52 @@ public class PaperPlatform implements Platform {
         return api.fromServerPlayer(commandHelper.bukkitEntity(context));
     }
 
+    public boolean shouldUseGetBukkitSender = false;
+    private boolean shouldTryMoonrise = true;
     private Method CraftWorld$getHandle;
     private Method ServerLevel$getEntityLookup;
     private Method EntityLookup$get;
 
+    private net.minecraft.world.entity.Entity getNmsEntityOld(net.minecraft.server.level.ServerLevel nmsLevel, UUID uuid) {
+        try {
+            if (ServerLevel$getEntityLookup == null)
+                ServerLevel$getEntityLookup = nmsLevel.getClass().getDeclaredMethod("getEntityLookup");
+
+            var entityLookup = ServerLevel$getEntityLookup.invoke(nmsLevel);
+
+            if (EntityLookup$get == null)
+                EntityLookup$get = entityLookup.getClass().getDeclaredMethod("get", UUID.class);
+
+            return (net.minecraft.world.entity.Entity) EntityLookup$get.invoke(entityLookup, uuid);
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+            debug(e);
+            // This should always fail unfortunately, but we don't have any other options
+            return nmsLevel.getEntity(uuid);
+        }
+    }
+
     private @Nullable Position getEntityPosition(net.minecraft.server.level.ServerLevel nmsLevel, UUID uuid) {
         net.minecraft.world.entity.Entity nmsEntity;
-        try {
-            // Works on 1.21+
-            nmsEntity = nmsLevel.moonrise$getEntityLookup().get(uuid);
-        } catch (NoSuchMethodError ignored) {
+        if (shouldTryMoonrise) {
             try {
-                if (ServerLevel$getEntityLookup == null)
-                    ServerLevel$getEntityLookup = nmsLevel.getClass().getDeclaredMethod("getEntityLookup");
-
-                var entityLookup = ServerLevel$getEntityLookup.invoke(nmsLevel);
-
-                if (EntityLookup$get == null)
-                    EntityLookup$get = entityLookup.getClass().getDeclaredMethod("get", UUID.class);
-
-                nmsEntity = (net.minecraft.world.entity.Entity) EntityLookup$get.invoke(entityLookup, uuid);
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-                debug(e);
-                nmsEntity = nmsLevel.getEntity(uuid);
+                // Works on 1.21+
+                nmsEntity = nmsLevel.moonrise$getEntityLookup().get(uuid);
+            } catch (NoSuchMethodError ignored) {
+                shouldTryMoonrise = false;
+                nmsEntity = getNmsEntityOld(nmsLevel, uuid);
             }
+        } else {
+            debugExtremelyVerbose("Skipping moonrise attempt");
+            nmsEntity = getNmsEntityOld(nmsLevel, uuid);
         }
         if (nmsEntity == null) return null;
-        Entity entity = nmsEntity.getBukkitEntity();
+        Entity entity;
+        if (shouldUseGetBukkitSender) {
+            debugExtremelyVerbose("Using getBukkitSender");
+            entity = (Entity) nmsEntity.getBukkitSender(null);
+        } else {
+            entity = nmsEntity.getBukkitEntity();
+        }
         return api.createPosition(
                 entity.getLocation().getX(),
                 entity.getLocation().getY(),
