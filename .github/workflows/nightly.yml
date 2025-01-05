@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - '*'
+    tags-ignore:
+      - '*'
 
 jobs:
   natives:
@@ -137,7 +139,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Add nightly suffix to version
-        run: sed -e '/pluginVersion = .*/s/"$/-nightly.${{ github.sha }}"/' -i buildSrc/src/main/kotlin/Properties.kt
+        run: sed -e '/pluginVersion = .*/s/"$/-nightly+${{ github.sha }}"/' -i buildSrc/src/main/kotlin/Properties.kt
 
       - name: Get version
         id: version
