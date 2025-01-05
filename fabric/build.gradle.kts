@@ -125,7 +125,7 @@ modrinth {
     projectId.set(Properties.modrinthProjectId)
     versionName.set("[FABRIC] " + project.version)
     versionNumber.set(Properties.pluginVersion)
-    changelog.set("<a href=\"https://modrinth.com/mod/fabric-api\"><img alt=\"Requires Fabric API\" height=\"56\" src=\"https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/fabric-api_vector.svg\" /></a>\n\n")
+    changelog.set("<a href=\"https://modrinth.com/mod/fabric-api\"><img alt=\"Requires Fabric API\" height=\"56\" src=\"https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/fabric-api_vector.svg\" /></a>\n\n${Changelog.get(file("$rootDir/CHANGELOG.md"))}")
     uploadFile.set(tasks.remapJar)
     gameVersions.set(Properties.supportedMinecraftVersions)
     debugMode.set(System.getenv("MODRINTH_DEBUG") != null)

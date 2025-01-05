@@ -99,7 +99,7 @@ modrinth {
     projectId.set(Properties.modrinthProjectId)
     versionName.set("[PAPER] " + project.version)
     versionNumber.set(Properties.pluginVersion)
-    changelog.set("")
+    changelog.set(Changelog.get(file("$rootDir/CHANGELOG.md")))
     uploadFile.set(tasks.reobfJar.get().outputJar.get())
     gameVersions.set(Properties.supportedMinecraftVersions)
     loaders.set(listOf("paper", "purpur"))
