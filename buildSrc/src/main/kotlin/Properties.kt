@@ -10,8 +10,8 @@ object Properties {
 
     /* Paper */
     const val paperApiVersion = "1.19"
-    const val paperMinecraftDevVersion = "1.21.3"
-    const val paperDevBundleVersion = "1.21.3-R0.1-SNAPSHOT"
+    const val paperMinecraftDevVersion = "1.21.4"
+    const val paperDevBundleVersion = "1.21.4-R0.1-SNAPSHOT"
 
     /* Fabric (https://fabricmc.net/develop) */
     const val fabricLoaderRequiredVersion = "0.14.22"

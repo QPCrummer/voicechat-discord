@@ -6,7 +6,6 @@ import de.maxhenkel.voicechat.api.ServerLevel;
 import de.maxhenkel.voicechat.api.ServerPlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +29,6 @@ public class PaperPlatform implements Platform {
         return api.fromServerPlayer(commandHelper.bukkitEntity(context));
     }
 
-    public boolean shouldUseGetBukkitSender = false;
     private boolean shouldTryMoonrise = true;
     private Method CraftWorld$getHandle;
     private Method ServerLevel$getEntityLookup;
@@ -69,17 +67,11 @@ public class PaperPlatform implements Platform {
             nmsEntity = getNmsEntityOld(nmsLevel, uuid);
         }
         if (nmsEntity == null) return null;
-        Entity entity;
-        if (shouldUseGetBukkitSender) {
-            debugExtremelyVerbose("Using getBukkitSender");
-            entity = (Entity) nmsEntity.getBukkitSender(null);
-        } else {
-            entity = nmsEntity.getBukkitEntity();
-        }
+        var position = nmsEntity.position();
         return api.createPosition(
-                entity.getLocation().getX(),
-                entity.getLocation().getY(),
-                entity.getLocation().getZ()
+                position.x,
+                position.y,
+                position.z
         );
     }
 

@@ -2,7 +2,7 @@ plugins {
     java
     id("com.modrinth.minotaur") version Properties.minotaurVersion
     id("com.github.johnrengelman.shadow") version Properties.shadowVersion
-    id("io.papermc.paperweight.userdev") version "1.7.1"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.11"
     id("xyz.jpenilla.run-paper") version "2.3.0"
 }
 

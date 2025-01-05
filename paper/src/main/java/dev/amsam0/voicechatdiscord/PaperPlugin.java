@@ -47,15 +47,6 @@ public final class PaperPlugin extends JavaPlugin implements Listener {
                 platform.info("Server is <1.20.6");
                 commandHelper = new Pre_1_20_6_CommandHelper();
             }
-
-            var wantedPlatform = Version.of(1, 21, 3);
-            if (parsed.isHigherThanOrEquivalentTo(wantedPlatform)) {
-                platform.info("Server is >=1.21.3");
-                ((PaperPlatform) platform).shouldUseGetBukkitSender = false;
-            } else {
-                platform.info("Server is <1.21.3");
-                ((PaperPlatform) platform).shouldUseGetBukkitSender = true;
-            }
         } catch (IllegalArgumentException | ParseException e) {
             var v = getServer().getMinecraftVersion();
             platform.warn("Unable to parse server version (" + v + "): " + e.getMessage());
@@ -75,19 +66,6 @@ public final class PaperPlugin extends JavaPlugin implements Listener {
             } else {
                 platform.info("Server is most likely >=1.20.6");
                 commandHelper = new Post_1_20_6_CommandHelper();
-            }
-
-            if (v.equals("1.19.4") ||
-                    v.equals("1.20") ||
-                    v.equals("1.20.0") ||
-                    v.equals("1.20.1") ||
-                    v.equals("1.20.2")
-            ) {
-                platform.info("Server is most likely <1.20.3");
-                ((PaperPlatform) platform).shouldUseGetBukkitSender = true;
-            } else {
-                platform.info("Server is most likely >=1.20.3");
-                ((PaperPlatform) platform).shouldUseGetBukkitSender = false;
             }
         }
 
