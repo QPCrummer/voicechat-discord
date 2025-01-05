@@ -2,6 +2,12 @@
 
 This will mirror https://modrinth.com/plugin/simple-voice-chat-discord-bridge/changelog
 
+## 3.0.6
+
+- Update to support 1.12.3+; thanks to AlexDerProGamer for their initial PR
+
+Code changes: https://github.com/amsam0/voicechat-discord/compare/3.0.5...3.0.6
+
 ## 3.0.5
 
 - Add thread names to make future debugging easier
