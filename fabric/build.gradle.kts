@@ -2,7 +2,7 @@ plugins {
     java
     id("com.modrinth.minotaur") version Properties.minotaurVersion
     id("com.github.johnrengelman.shadow") version Properties.shadowVersion
-    id("fabric-loom") version "1.7-SNAPSHOT" // https://fabricmc.net/develop
+    id("fabric-loom") version "1.9-SNAPSHOT" // https://fabricmc.net/develop
 }
 
 project.version = Properties.pluginVersion
