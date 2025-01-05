@@ -5,7 +5,6 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
-import dev.amsam0.voicechatdiscord.PaperPlugin;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.bukkit.Bukkit;
@@ -27,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import static dev.amsam0.voicechatdiscord.BukkitHelper.getCraftServer;
 import static dev.amsam0.voicechatdiscord.BukkitHelper.getVanillaCommandWrapper;
 import static dev.amsam0.voicechatdiscord.Core.platform;
-import static dev.amsam0.voicechatdiscord.PaperPlugin.*;
+import static dev.amsam0.voicechatdiscord.PaperPlugin.get;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 @DefaultQualifier(NonNull.class)
