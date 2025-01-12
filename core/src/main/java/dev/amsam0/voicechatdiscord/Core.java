@@ -26,6 +26,7 @@ public final class Core {
     public static Platform platform;
     public static int debugLevel = 0;
     public static boolean alertOpsOfUpdates = true;
+    public static boolean stereoAudio = true;
 
     private static native void initializeNatives();
 
@@ -89,6 +90,8 @@ public final class Core {
 
         config.addDefault("debug_level", 0);
 
+        config.addDefault("stereo_audio", true);
+
         config.getOptions().setCopyDefaults(true);
         config.getOptions().setHeader(CONFIG_HEADER);
         try {
@@ -137,6 +140,13 @@ public final class Core {
             setDebugLevel(debugLevel);
         } catch (ClassCastException e) {
             platform.error("Please make sure the debug_level option is a valid integer");
+        }
+
+        try {
+            stereoAudio = (boolean) config.get("stereo_audio");
+            if (stereoAudio) platform.info("Stereo Audio Enabled");
+        } catch (ClassCastException e) {
+            platform.error("Please make sure the stereo_audio option is a valid boolean (true or false)");
         }
     }
 

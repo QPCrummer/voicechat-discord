@@ -5,10 +5,7 @@ use eyre::{eyre, Context as _, Report};
 use parking_lot::Mutex;
 use songbird::driver::opus::coder::Decoder;
 
-use crate::audio_util::{
-    adjust_volume, RawAudio, CHANNELS, MAX_AUDIO_BUFFER, OPUS_CHANNELS, OPUS_SAMPLE_RATE,
-    RAW_AUDIO_SIZE,
-};
+use crate::audio_util::{adjust_panning, adjust_volume, RawAudio, CHANNELS, MAX_AUDIO_BUFFER, OPUS_CHANNELS, OPUS_SAMPLE_RATE, RAW_AUDIO_SIZE};
 
 use super::{Sender, SenderId, State};
 
@@ -45,6 +42,7 @@ impl super::DiscordBot {
         adjust_based_on_distance: bool,
         distance: f64,
         max_distance: f64,
+        pan_offset: f64,
     ) -> Result<(), Report> {
         let State::Started { senders, .. } = &*self.state.read() else {
             return Err(eyre!("Bot is not started"));
@@ -79,6 +77,11 @@ impl super::DiscordBot {
                 // only adjust volume if it's less than 100%
                 adjust_volume(&mut audio, volume);
             }
+        }
+
+        // Adjust panning
+        if pan_offset != 0.0 {
+            adjust_panning(&mut audio, pan_offset);
         }
 
         sender

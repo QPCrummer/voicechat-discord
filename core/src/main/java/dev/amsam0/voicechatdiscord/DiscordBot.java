@@ -271,13 +271,14 @@ public class DiscordBot {
         _free(ptr);
     }
 
-    private native void _addAudioToHearingBuffer(long ptr, int senderId, byte[] rawOpusData, boolean adjustBasedOnDistance, double distance, double maxDistance);
+    private native void _addAudioToHearingBuffer(long ptr, int senderId, byte[] rawOpusData, boolean adjustBasedOnDistance, double distance, double maxDistance, double panOffset);
 
     public void handlePacket(SoundPacket packet) {
         UUID senderId = packet.getSender();
 
         @Nullable Position position = null;
         double maxDistance = 0.0;
+        double panOffset = 0.0;
         boolean whispering = false;
 
         platform.debugExtremelyVerbose("packet is a " + packet.getClass().getSimpleName());
@@ -288,6 +289,9 @@ public class DiscordBot {
         } else if (packet instanceof LocationalSoundPacket sound) {
             position = sound.getPosition();
             maxDistance = sound.getDistance();
+            if (Core.stereoAudio) {
+                panOffset = Util.angle(platform.getEntityFacing(player.getServerLevel(), player.getUuid()), player.getPosition(), position);
+            }
         } else if (!(packet instanceof StaticSoundPacket)) {
             platform.warn("packet is not LocationalSoundPacket, StaticSoundPacket or EntitySoundPacket, it is " + packet.getClass().getSimpleName() + ". Please report this on GitHub Issues!");
         }
@@ -303,7 +307,7 @@ public class DiscordBot {
 
         platform.debugExtremelyVerbose("adding audio for " + senderId);
 
-        _addAudioToHearingBuffer(ptr, senderId.hashCode(), packet.getOpusEncodedData(), position != null, distance, maxDistance);
+        _addAudioToHearingBuffer(ptr, senderId.hashCode(), packet.getOpusEncodedData(), position != null, distance, maxDistance, panOffset);
     }
 
     private native byte[] _blockForSpeakingBufferOpusData(long ptr);

@@ -46,6 +46,14 @@ public class FabricPlatform implements Platform {
                 : null;
     }
 
+    public double getEntityFacing(ServerLevel level, UUID uuid) {
+        ServerWorld world = (ServerWorld) level.getServerLevel();
+        Entity entity = world.getEntity(uuid);
+        return entity != null ?
+                Math.toRadians(entity.getFacing().asRotation())
+                : 0.0;
+    }
+
     public boolean isOperator(Object sender) {
         if (sender instanceof CommandContext<?> source)
             return ((ServerCommandSource) source.getSource()).hasPermissionLevel(2);

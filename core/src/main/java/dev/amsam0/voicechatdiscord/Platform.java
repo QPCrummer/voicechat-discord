@@ -23,6 +23,8 @@ public interface Platform {
     @Nullable
     Position getEntityPosition(ServerLevel level, UUID uuid);
 
+    double getEntityFacing(ServerLevel level, UUID uuid);
+
     boolean isOperator(Object sender);
 
     boolean hasPermission(Object sender, String permission);

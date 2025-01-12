@@ -99,6 +99,7 @@ pub extern "system" fn Java_dev_amsam0_voicechatdiscord_DiscordBot__1addAudioToH
     adjust_based_on_distance: jboolean,
     distance: jdouble,
     max_distance: jdouble,
+    pan_offset: jdouble,
 ) {
     let discord_bot = unsafe { &mut *(ptr as *mut DiscordBot) };
 
@@ -112,6 +113,7 @@ pub extern "system" fn Java_dev_amsam0_voicechatdiscord_DiscordBot__1addAudioToH
         adjust_based_on_distance == JNI_TRUE,
         distance,
         max_distance,
+        pan_offset,
     ) {
         info!(
             "Error when adding audio for bot with vc_id {}: {e:#}",

@@ -17,6 +17,14 @@ public final class Util {
         );
     }
 
+    public static double angle(double playerFacing, Position playerPosition, Position audioSourcePosition) {
+        double deltaX = audioSourcePosition.getX() - playerPosition.getX();
+        double deltaY = audioSourcePosition.getY() - playerPosition.getY();
+        double angleToSource = Math.atan2(deltaY, deltaX);
+        double relativeAngle = angleToSource - playerFacing;
+        return Math.atan2(Math.sin(relativeAngle), Math.cos(relativeAngle));
+    }
+
     public static String positionToString(Position pos) {
         return pos.getX() + ", " + pos.getY() + ", " + pos.getZ();
     }

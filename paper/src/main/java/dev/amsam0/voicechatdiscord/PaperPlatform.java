@@ -75,6 +75,25 @@ public class PaperPlatform implements Platform {
         );
     }
 
+    private double getEntityFacing(net.minecraft.server.level.ServerLevel nmsLevel, UUID uuid) {
+        net.minecraft.world.entity.Entity nmsEntity;
+        if (shouldTryMoonrise) {
+            try {
+                // Works on 1.21+
+                nmsEntity = nmsLevel.moonrise$getEntityLookup().get(uuid);
+            } catch (NoSuchMethodError ignored) {
+                shouldTryMoonrise = false;
+                nmsEntity = getNmsEntityOld(nmsLevel, uuid);
+            }
+        } else {
+            debugExtremelyVerbose("Skipping moonrise attempt");
+            nmsEntity = getNmsEntityOld(nmsLevel, uuid);
+        }
+        return nmsEntity != null ?
+                Math.toRadians(nmsEntity.getDirection().toYRot())
+                : 0.0;
+    }
+
     public @Nullable Position getEntityPosition(ServerLevel level, UUID uuid) {
         try {
             if (level.getServerLevel() instanceof World world) {
@@ -103,6 +122,28 @@ public class PaperPlatform implements Platform {
         }
         error("level is not World or ServerLevel, it is " + level.getClass().getSimpleName() + ". Please report this on GitHub Issues!");
         return null;
+    }
+
+    public double getEntityFacing(ServerLevel level, UUID uuid) {
+        try {
+            if (level.getServerLevel() instanceof World world) {
+                // Same reasons as above
+
+                if (CraftWorld$getHandle == null)
+                    CraftWorld$getHandle = getCraftWorld().getMethod("getHandle");
+
+                net.minecraft.server.level.ServerLevel nmsLevel = (net.minecraft.server.level.ServerLevel) CraftWorld$getHandle.invoke(world);
+                return getEntityFacing(nmsLevel, uuid);
+            }
+            if (level.getServerLevel() instanceof net.minecraft.server.level.ServerLevel nmsLevel) {
+                return getEntityFacing(nmsLevel, uuid);
+            }
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
+                 ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        error("level is not World or ServerLevel, it is " + level.getClass().getSimpleName() + ". Please report this on GitHub Issues!");
+        return 0.0;
     }
 
     public boolean isOperator(Object sender) {
