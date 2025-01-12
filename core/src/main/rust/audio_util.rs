@@ -1,5 +1,5 @@
-use std::f64::consts::PI;
 use songbird::driver::opus::{Channels, SampleRate};
+use std::f64::consts::PI;
 use tracing::{trace, warn};
 
 /// 1 second of RawAudio

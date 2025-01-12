@@ -5,7 +5,10 @@ use eyre::{eyre, Context as _, Report};
 use parking_lot::Mutex;
 use songbird::driver::opus::coder::Decoder;
 
-use crate::audio_util::{adjust_panning, adjust_volume, RawAudio, CHANNELS, MAX_AUDIO_BUFFER, OPUS_CHANNELS, OPUS_SAMPLE_RATE, RAW_AUDIO_SIZE};
+use crate::audio_util::{
+    adjust_panning, adjust_volume, RawAudio, CHANNELS, MAX_AUDIO_BUFFER, OPUS_CHANNELS,
+    OPUS_SAMPLE_RATE, RAW_AUDIO_SIZE,
+};
 
 use super::{Sender, SenderId, State};
 
